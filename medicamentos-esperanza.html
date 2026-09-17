@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+<title>Tus medicamentos, Esperanza</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf3ea;
+    --paper:#fffdf9;
+    --ink:#2b2621;
+    --ink-soft:#5c534a;
+    --line:#e8ddc9;
+
+    --ayunas:#c98a1f;      --ayunas-soft:#fbf0dc;
+    --desayuno:#cf5b2c;    --desayuno-soft:#fbe4d5;
+    --almuerzo:#3f7d4a;    --almuerzo-soft:#e9f4ea;
+    --noche:#31548f;       --noche-soft:#e8eef8;
+    --actividad:#7a4c93;   --actividad-soft:#f1e7f6;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg:#221e19; --paper:#2c2721; --ink:#f3ece0; --ink-soft:#c9bfae; --line:#42392d;
+      --ayunas-soft:#3a2e17; --desayuno-soft:#3a2416; --almuerzo-soft:#1d2d20; --noche-soft:#1c2534; --actividad-soft:#2c2032;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#221e19; --paper:#2c2721; --ink:#f3ece0; --ink-soft:#c9bfae; --line:#42392d;
+    --ayunas-soft:#3a2e17; --desayuno-soft:#3a2416; --almuerzo-soft:#1d2d20; --noche-soft:#1c2534; --actividad-soft:#2c2032;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Atkinson Hyperlegible", Arial, sans-serif;
+    font-size:20px;
+    line-height:1.6;
+    min-height:100vh;
+    padding-bottom:52px;
+  }
+
+  header{
+    padding:36px 20px 28px;
+    text-align:center;
+    border-bottom:3px solid var(--line);
+    background:var(--paper);
+  }
+  header .kicker{ font-size:18px; color:var(--ink-soft); margin:0 0 4px; }
+  header h1{ margin:0; font-size:2.3rem; font-weight:700; letter-spacing:-0.01em; }
+  header .fecha{ margin-top:12px; font-size:18px; color:var(--ink-soft); }
+
+  main{ max-width:660px; margin:0 auto; padding:24px 16px 0; }
+
+  .aviso{
+    background:var(--paper);
+    border:3px solid var(--noche);
+    border-radius:22px;
+    padding:24px 22px;
+    margin-bottom:28px;
+    text-align:center;
+  }
+  .aviso .etiqueta{ font-size:17px; color:var(--ink-soft); margin:0 0 8px; }
+  .aviso .nombre{ font-size:2rem; font-weight:700; color:var(--noche); margin:0; }
+  .aviso .detalle{ margin:10px 0 0; font-size:19px; color:var(--ink-soft); }
+
+  .leer-todo{
+    display:block;
+    width:100%;
+    margin-bottom:28px;
+    padding:20px;
+    font-family:inherit;
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:0.03em;
+    border-radius:18px;
+    border:3px solid var(--ink);
+    background:var(--paper);
+    color:var(--ink);
+    cursor:pointer;
+    text-transform:uppercase;
+  }
+  .leer-todo:active{ transform:scale(0.98); }
+
+  .tarjeta{
+    border-radius:24px;
+    padding:24px;
+    margin-bottom:22px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .tarjeta.ayunas{ background:var(--ayunas-soft); }
+  .tarjeta.desayuno{ background:var(--desayuno-soft); }
+  .tarjeta.almuerzo{ background:var(--almuerzo-soft); }
+  .tarjeta.noche{ background:var(--noche-soft); }
+  .tarjeta.actividad{ background:var(--actividad-soft); }
+
+  .fila-superior{ display:flex; align-items:center; gap:16px; }
+  .icono{
+    font-size:2.6rem;
+    line-height:1;
+    flex-shrink:0;
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--paper);
+  }
+  .titulo h2{ margin:0; font-size:1.55rem; font-weight:700; }
+  .momento{
+    display:inline-block;
+    margin-top:8px;
+    padding:5px 14px;
+    border-radius:999px;
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+  }
+  .ayunas .momento{ background:var(--ayunas); }
+  .desayuno .momento{ background:var(--desayuno); }
+  .almuerzo .momento{ background:var(--almuerzo); }
+  .noche .momento{ background:var(--noche); }
+  .actividad .momento{ background:var(--actividad); }
+
+  .instruccion{ margin:0; font-size:19px; color:var(--ink-soft); }
+
+  .acciones{ display:flex; gap:12px; flex-wrap:wrap; }
+  .acciones button{
+    flex:1;
+    min-width:150px;
+    padding:16px 10px;
+    font-family:inherit;
+    font-size:17px;
+    font-weight:700;
+    border-radius:16px;
+    cursor:pointer;
+    border:3px solid var(--paper);
+    background:var(--paper);
+    color:var(--ink);
+  }
+  .acciones button.escuchar{ text-transform:uppercase; letter-spacing:0.02em; }
+  .ayunas .acciones button.escuchar{ border-color:var(--ayunas); color:var(--ayunas); }
+  .desayuno .acciones button.escuchar{ border-color:var(--desayuno); color:var(--desayuno); }
+  .almuerzo .acciones button.escuchar{ border-color:var(--almuerzo); color:var(--almuerzo); }
+  .noche .acciones button.escuchar{ border-color:var(--noche); color:var(--noche); }
+  .actividad .acciones button.escuchar{ border-color:var(--actividad); color:var(--actividad); }
+
+  .acciones button.tomado{ border-color:var(--ink-soft); color:var(--ink-soft); }
+  .acciones button.tomado.hecho{ background:#3f7d4a; border-color:#3f7d4a; color:#fff; }
+
+  .acciones button:active{ transform:scale(0.98); }
+
+  footer{ max-width:660px; margin:8px auto 0; padding:0 16px; text-align:center; color:var(--ink-soft); font-size:17px; }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Esperanza Vélez Muñoz</p>
+  <h1>Tus medicamentos</h1>
+  <p class="fecha" id="fecha-hoy"></p>
+</header>
+
+<main>
+  <div class="aviso" id="aviso-proximo">
+    <p class="etiqueta">Ahora te toca</p>
+    <p class="nombre" id="aviso-nombre">—</p>
+    <p class="detalle" id="aviso-detalle"></p>
+  </div>
+
+  <button class="leer-todo" id="btn-leer-todo" type="button">🔊 Leer todos en voz alta</button>
+
+  <div id="lista-tarjetas"></div>
+</main>
+
+<footer>
+  <p>💗 Ante cualquier duda, consulta siempre a tu médico. 💗</p>
+</footer>
+
+<script>
+(function(){
+  var MEDS = [
+    {
+      id: "omeprazol", clase: "ayunas", icono: "🌅",
+      nombre: "Omeprazol", momento: "En ayunas",
+      instruccion: "Tómalo en ayunas, 30 minutos antes del desayuno.",
+      inicio: 5, fin: 7
+    },
+    {
+      id: "aspirina", clase: "desayuno", icono: "☕",
+      nombre: "Aspirina", momento: "Después del desayuno",
+      instruccion: "Tómala después del desayuno, ya con algo de comida en el estómago.",
+      inicio: 7, fin: 9.5
+    },
+    {
+      id: "vildagliptina", clase: "almuerzo", icono: "🍽️",
+      nombre: "Vildagliptina + Metformina", momento: "En el almuerzo",
+      instruccion: "Tómalo con el almuerzo, para mejor tolerancia y eficacia.",
+      inicio: 11, fin: 14
+    },
+    {
+      id: "rosuvastatina", clase: "noche", icono: "🌙",
+      nombre: "Rosuvastatina", momento: "En la noche",
+      instruccion: "Tómalo por la noche, antes de acostarte.",
+      inicio: 20, fin: 23
+    },
+    {
+      id: "empagliflozina", clase: "noche", icono: "🌙",
+      nombre: "Empagliflozina", momento: "En la noche",
+      instruccion: "Tómala por la noche, con o sin alimentos, según la indicación de tu médico.",
+      inicio: 20, fin: 23
+    },
+    {
+      id: "trimetazidina", clase: "actividad", icono: "🏃‍♀️",
+      nombre: "Trimetazidina", momento: "Al hacer actividad física",
+      instruccion: "Tómala antes o durante la actividad física, según la indicación de tu médico.",
+      inicio: null, fin: null
+    }
+  ];
+
+  var hoyStr = new Date().toDateString();
+
+  function claveTomado(id){ return "med_tomado_" + id; }
+
+  function leerEstado(id){
+    try{
+      var raw = localStorage.getItem(claveTomado(id));
+      if(!raw) return false;
+      var data = JSON.parse(raw);
+      return data && data.fecha === hoyStr && data.tomado === true;
+    }catch(e){ return false; }
+  }
+
+  function guardarEstado(id, tomado){
+    try{
+      localStorage.setItem(claveTomado(id), JSON.stringify({fecha: hoyStr, tomado: tomado}));
+    }catch(e){ /* si falla, seguimos sin memoria persistente */ }
+  }
+
+  function pintarFecha(){
+    var opciones = { weekday: 'long', day: 'numeric', month: 'long' };
+    var texto = new Date().toLocaleDateString('es-CO', opciones);
+    document.getElementById('fecha-hoy').textContent = texto.charAt(0).toUpperCase() + texto.slice(1);
+  }
+
+  function calcularProximo(){
+    var ahora = new Date();
+    var horaActual = ahora.getHours() + ahora.getMinutes()/60;
+    var conHorario = MEDS.filter(function(m){ return m.inicio !== null; });
+
+    var enCurso = conHorario.find(function(m){ return horaActual >= m.inicio && horaActual < m.fin; });
+    if(enCurso) return { med: enCurso, texto: "en este momento" };
+
+    var siguientes = conHorario
+      .map(function(m){ return { med: m, distancia: (m.inicio - horaActual + 24) % 24 }; })
+      .sort(function(a,b){ return a.distancia - b.distancia; });
+
+    var proximo = siguientes[0];
+    var horas = Math.floor(proximo.distancia);
+    var texto;
+    if(horas < 1) texto = "en menos de una hora";
+    else if(horas === 1) texto = "en 1 hora";
+    else texto = "en " + horas + " horas";
+
+    return { med: proximo.med, texto: texto };
+  }
+
+  function pintarAviso(){
+    var r = calcularProximo();
+    document.getElementById('aviso-nombre').textContent = r.med.nombre;
+    document.getElementById('aviso-detalle').textContent =
+      r.texto === "en este momento"
+        ? r.med.momento + " — es ahora."
+        : r.med.momento + " — falta aproximadamente " + r.texto + ".";
+  }
+
+  function hablar(texto){
+    try{
+      if(!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(texto);
+      u.lang = 'es-ES';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }catch(e){ /* si el navegador no soporta voz, no pasa nada */ }
+  }
+
+  function construirTarjetas(){
+    var cont = document.getElementById('lista-tarjetas');
+    MEDS.forEach(function(m){
+      var div = document.createElement('div');
+      div.className = 'tarjeta ' + m.clase;
+
+      var tomadoInicial = leerEstado(m.id);
+
+      div.innerHTML =
+        '<div class="fila-superior">' +
+          '<div class="icono">' + m.icono + '</div>' +
+          '<div class="titulo">' +
+            '<h2>' + m.nombre + '</h2>' +
+            '<span class="momento">' + m.momento + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<p class="instruccion">' + m.instruccion + '</p>' +
+        '<div class="acciones">' +
+          '<button class="escuchar" type="button">🔊 Escuchar</button>' +
+          '<button class="tomado' + (tomadoInicial ? ' hecho' : '') + '" type="button">' +
+            (tomadoInicial ? '✔️ Tomado hoy' : 'Marcar como tomado') +
+          '</button>' +
+        '</div>';
+
+      var btnEscuchar = div.querySelector('.escuchar');
+      btnEscuchar.addEventListener('click', function(){
+        hablar(m.nombre + ". " + m.momento + ". " + m.instruccion);
+      });
+
+      var btnTomado = div.querySelector('.tomado');
+      btnTomado.addEventListener('click', function(){
+        var actual = btnTomado.classList.contains('hecho');
+        var nuevo = !actual;
+        btnTomado.classList.toggle('hecho', nuevo);
+        btnTomado.textContent = nuevo ? '✔️ Tomado hoy' : 'Marcar como tomado';
+        guardarEstado(m.id, nuevo);
+      });
+
+      cont.appendChild(div);
+    });
+  }
+
+  document.getElementById('btn-leer-todo').addEventListener('click', function(){
+    var texto = MEDS.map(function(m){
+      return m.nombre + ", " + m.momento + ". " + m.instruccion;
+    }).join(" ");
+    hablar(texto);
+  });
+
+  pintarFecha();
+  pintarAviso();
+  construirTarjetas();
+  setInterval(pintarAviso, 60000);
+})();
+</script>
+
+</body>
+</html>
